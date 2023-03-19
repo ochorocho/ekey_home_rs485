@@ -3,17 +3,18 @@ from __future__ import annotations
 
 import ipaddress
 import logging
+
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
-from config.custom_components.ekey_home_rs485.rs485 import socket_connection
+from config.custom_components.ekey_home_rs485.const import CONF_MAPPING, EKEY_USER_ID, EKEY_HA_USER, EKEY_TASK_NAME
+from config.custom_components.ekey_home_rs485.socket import connection
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
-    SensorStateClass,
     PLATFORM_SCHEMA
 )
-from homeassistant.const import ELECTRIC_POTENTIAL_VOLT, CONF_PORT, CONF_IP_ADDRESS
+from homeassistant.const import CONF_PORT, CONF_IP_ADDRESS
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
@@ -22,7 +23,7 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_IP_ADDRESS): vol.All(ipaddress.ip_address, cv.string),
     vol.Required(CONF_PORT): cv.port,
-    vol.Required('user_mapping'): cv.ensure_list,
+    vol.Required(CONF_MAPPING): cv.ensure_list,
 })
 
 _LOGGER = logging.getLogger(__name__)
@@ -45,18 +46,16 @@ async def async_setup_platform(
     #       * Add config flow (maybe)
     #       * Fire event
     entities = []
-    ekey_config = config.get("user_mapping")
+    ekey_config = config.get(CONF_MAPPING)
 
     for ekey in ekey_config:
-        ekey_id = ekey["ekey_user_id"]
-        username = str(ekey["ha_username"])
-        entity_name = username + " (ekey_id:" + str(ekey_id) + ")"
+        ekey_id = ekey[EKEY_USER_ID]
+        username = str(ekey[EKEY_HA_USER])
+        entity_name = username + " - ekey_id:" + str(ekey_id)
         entities.append(EkeyHomeRs485Sensor(entity_name, ekey_id, username, SensorDeviceClass))
 
     async_add_entities(entities)
-
-    # Create task outside the event loop
-    hass.async_create_task(socket_connection(hass, config))
+    hass.async_create_background_task(connection(hass, config), EKEY_TASK_NAME)
 
 
 class EkeyHomeRs485Sensor(SensorEntity):
@@ -73,10 +72,8 @@ class EkeyHomeRs485Sensor(SensorEntity):
     @property
     def available(self):
         """Return if projector is available."""
-
         return self._available
 
     def update(self) -> None:
         """Fetch data - get the state set in 'set_state'"""
-        #_LOGGER.error(self.hass.states.get(self.entity_id).state)
         self._attr_native_value = self.hass.states.get(self.entity_id).state
