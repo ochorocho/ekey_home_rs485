@@ -1,0 +1,11 @@
+{
+    "domain": "ekey_home_rs485",
+    "name": "ekey home converter LAN RS-485",
+    "documentation": "https://github.com/ochorocho/ekey_home_rs485",
+    "dependencies": [],
+    "codeowners": ["@ochorocho"],
+    "requirements": [
+        "sockets==1.0.0"
+    ],
+    "version": "0.1.0"
+}
