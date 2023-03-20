@@ -39,4 +39,6 @@ sensor:
 ## Todo
 
  - [ ] Fire an event when data changes
+ - [ ] Add config flow
  - [ ] Attach the sensor state to the user entity?!
+ - [ ] Autodiscovery would be nice, swipe on device let HA know that there is some sort of fingerprint device available?!

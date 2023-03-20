@@ -7,8 +7,8 @@ import logging
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
-from config.custom_components.ekey_home_rs485.const import CONF_MAPPING, EKEY_USER_ID, EKEY_HA_USER, EKEY_TASK_NAME
-from config.custom_components.ekey_home_rs485.socket import connection
+from . const import CONF_MAPPING, EKEY_USER_ID, EKEY_HA_USER, EKEY_TASK_NAME
+from . socket import connection
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
