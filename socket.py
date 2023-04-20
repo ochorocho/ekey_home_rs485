@@ -24,8 +24,6 @@ async def connection(hass, config):
     ha_ip_address = parsed_url.hostname
     ekey_ip_address = config.get(CONF_IP_ADDRESS)
     port = config.get(CONF_PORT)
-    _LOGGER.info("Ping ekey home converter KNX RS-485 on ip address " + ekey_ip_address + ", port " + str(port))
-
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     try:
@@ -36,6 +34,7 @@ async def connection(hass, config):
 
     sock.setblocking(False)
     sock.connect((ekey_ip_address, port))
+    _LOGGER.info("Ping ekey home converter KNX RS-485 on ip address " + ekey_ip_address + ", port " + str(port))
     sock.send("G'Day\n".encode('utf-8'))
 
     while True:
