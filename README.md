@@ -20,8 +20,10 @@ For details see [ekey home rs 485 manual](https://www.ekey.net/wp-content/dokume
  * Rename the folder to `ekey_home_rs485` 
  * Move the folder to HomeAssistant `config/custom_components/`
 
-:warning: Ensure you configured the "Sender Port" and "Receiver IP address" correctly and the "Protocol type" is set to "home" in the "[ekey home converter LAN config](https://www.ekey.net/wp-content/dokumente/ekey_home_CV_LAN_4.4.37.29.zip)" Windows app.
+:warning: Important! 
 
+* Ensure you configured the "Sender Port" and "Receiver IP address" correctly and the "Protocol type" is set to "home" in the "[ekey home converter LAN config](https://www.ekey.net/wp-content/dokumente/ekey_home_CV_LAN_4.4.37.29.zip)" Windows app.
+* Ensure other integrations do not already use the configured IP_ADDRESS:PORT combination, E.g. NodeRed might do this. So you have to configure a different port!
 
 ## Configuration
 
@@ -41,7 +43,7 @@ sensor:
 
 ## Todo
 
- - [ ] Fire an event when data changes
+ - [ ] Fire an event when data changes. Trigger event even though the same finger was used.
  - [ ] Add config flow
  - [ ] Attach the sensor state to the user entity?!
  - [-] Autodiscovery would be nice, swipe on device let HA know that there is some sort of fingerprint device available?! Nah, this will not work.

@@ -27,7 +27,13 @@ async def connection(hass, config):
     _LOGGER.info("Ping ekey home converter KNX RS-485 on ip address " + ekey_ip_address + ", port " + str(port))
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((ha_ip_address, port))
+
+    try:
+        sock.bind((ha_ip_address, port))
+    except OSError as e:
+        _LOGGER.error("Could not connect to socket: " + e.strerror + ". The combination  of IP " + str(ha_ip_address) + " and port " + str(port) + " failed maybe due to another integration is already using this connection.")
+        return
+
     sock.setblocking(False)
     sock.connect((ekey_ip_address, port))
     sock.send("G'Day\n".encode('utf-8'))
