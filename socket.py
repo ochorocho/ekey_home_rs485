@@ -3,9 +3,10 @@ import asyncio
 import errno
 import re
 import socket
+import time
 from urllib.parse import urlparse
 
-from config.custom_components.ekey_home_rs485.const import CONF_MAPPING, EKEY_USER_ID, EKEY_HA_USER
+from .const import CONF_MAPPING, EKEY_USER_ID, EKEY_HA_USER
 from homeassistant.const import CONF_IP_ADDRESS, CONF_PORT
 from homeassistant.helpers.network import get_url
 import logging
@@ -35,6 +36,11 @@ async def connection(hass, config):
         await asyncio.sleep(0.2)
         try:
             data, addr = sock.recvfrom(1024)
+        except ConnectionRefusedError:
+            _LOGGER.error("Could not connect to ekey home rs485 on " + ekey_ip_address)
+            time.sleep(10)
+            sock.close()
+            await connection(hass, config)
         except socket.error as e:
             if e.errno == errno.EAGAIN:
                 pass
