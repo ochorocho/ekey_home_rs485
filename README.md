@@ -20,6 +20,9 @@ For details see [ekey home rs 485 manual](https://www.ekey.net/wp-content/dokume
  * Rename the folder to `ekey_home_rs485` 
  * Move the folder to HomeAssistant `config/custom_components/`
 
+:warning: Ensure you configured the "Sender Port" and "Receiver IP address" correctly and the "Protocol type" is set to "home" in the "[ekey home converter LAN config](https://www.ekey.net/wp-content/dokumente/ekey_home_CV_LAN_4.4.37.29.zip)" Windows app.
+
+
 ## Configuration
 
 This custom integration will add the platform `ekey_home_rs485`.
