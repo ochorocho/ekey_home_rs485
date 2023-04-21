@@ -1,4 +1,4 @@
-"""Socket communications for ekey home rs485"""
+"""Socket communication for ekey home rs485"""
 import asyncio
 import errno
 import re
@@ -57,10 +57,12 @@ async def connection(hass, config):
             if is_valid(received):
                 chunks = received.split('_')
                 entity_name = get_entity_name(int(chunks[1]), config.get(CONF_MAPPING))
+                finger_name = get_finger_name(chunks[2])
+                _LOGGER.info("Set state to " + finger_name + " for " + entity_name)
+                # @todo: if AKTION is 2 - Refused due to unknown finger - Do something
                 set_state(hass, entity_name, chunks)
             else:
                 _LOGGER.error("Invalid packet received: " + received)
-
             pass
 
 
